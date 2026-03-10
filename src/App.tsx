@@ -687,7 +687,10 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#0F172A] text-[#1A1A1A] dark:text-[#F8FAFC] font-sans selection:bg-indigo-100 dark:selection:bg-indigo-900/30 transition-colors duration-300">
+    <div className={cn(
+      "min-h-screen bg-[#F8F9FA] dark:bg-[#0F172A] text-[#1A1A1A] dark:text-[#F8FAFC] font-sans selection:bg-indigo-100 dark:selection:bg-indigo-900/30 transition-colors duration-300",
+      theme === 'dark' ? 'dark' : ''
+    )}>
       {/* Header */}
       <header className="border-b border-black/5 dark:border-white/5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -1521,16 +1524,16 @@ export default function App() {
             />
             <motion.div
               layoutId={selectedGalleryItem.id}
-              className="relative bg-white w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row h-full max-h-[800px]"
+              className="relative bg-white dark:bg-slate-900 w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row h-full max-h-[800px] transition-colors duration-300"
             >
               <button 
                 onClick={() => setSelectedGalleryItem(null)}
-                className="absolute top-4 right-4 z-10 p-2 bg-black/10 hover:bg-black/20 rounded-full text-white md:text-gray-500 transition-colors"
+                className="absolute top-4 right-4 z-10 p-2 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 rounded-full text-white md:text-gray-500 dark:md:text-gray-400 transition-colors"
               >
                 <X size={24} />
               </button>
 
-              <div className="flex-1 bg-gray-100 flex items-center justify-center p-6 min-h-0">
+              <div className="flex-1 bg-gray-100 dark:bg-slate-950 flex items-center justify-center p-6 min-h-0 transition-colors duration-300">
                 <img 
                   src={selectedGalleryItem.refined || selectedGalleryItem.original} 
                   alt="Artwork Large" 
@@ -1539,25 +1542,25 @@ export default function App() {
                 />
               </div>
 
-              <div className="w-full md:w-80 p-8 flex flex-col justify-between bg-white border-l border-black/5">
+              <div className="w-full md:w-80 p-8 flex flex-col justify-between bg-white dark:bg-slate-900 border-l border-black/5 dark:border-white/5 transition-colors duration-300">
                 <div className="space-y-8">
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900">{selectedGalleryItem.title || 'Untitled Sketch'}</h3>
-                    <p className="text-gray-500 text-sm">Created on {new Date(selectedGalleryItem.timestamp).toLocaleString()}</p>
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{selectedGalleryItem.title || 'Untitled Sketch'}</h3>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">Created on {new Date(selectedGalleryItem.timestamp).toLocaleString()}</p>
                   </div>
 
                   <div className="space-y-4">
                     <button 
                       onClick={() => { continueEditing(selectedGalleryItem); setSelectedGalleryItem(null); }}
-                      className="w-full bg-indigo-50 text-indigo-600 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-100 transition-all border border-indigo-100"
+                      className="w-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-all border border-indigo-100 dark:border-indigo-500/30"
                     >
                       <Pencil size={18} />
                       Continue Editing
                     </button>
 
                     <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase tracking-widest text-gray-400">Style Applied</label>
-                      <div className="flex items-center gap-2 bg-indigo-50 text-indigo-600 px-3 py-2 rounded-xl font-semibold">
+                      <label className="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Style Applied</label>
+                      <div className="flex items-center gap-2 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-3 py-2 rounded-xl font-semibold">
                         <Sparkles size={16} />
                         {selectedGalleryItem.style}
                       </div>
@@ -1565,8 +1568,8 @@ export default function App() {
 
                     {selectedGalleryItem.refined && (
                       <div className="space-y-2">
-                        <label className="text-xs font-bold uppercase tracking-widest text-gray-400">Original Sketch</label>
-                        <div className="aspect-video bg-gray-50 rounded-xl overflow-hidden border border-black/5">
+                        <label className="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Original Sketch</label>
+                        <div className="aspect-video bg-gray-50 dark:bg-slate-800 rounded-xl overflow-hidden border border-black/5 dark:border-white/5">
                           <img 
                             src={selectedGalleryItem.original} 
                             className="w-full h-full object-contain" 
@@ -1584,43 +1587,43 @@ export default function App() {
                       <div className="grid grid-cols-3 gap-2">
                         <button 
                           onClick={() => downloadInFormat(selectedGalleryItem.refined!, 'png', selectedGalleryItem.title || 'refined')}
-                          className="bg-indigo-600 text-white py-3 rounded-xl text-[10px] font-bold flex flex-col items-center justify-center gap-1 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 uppercase tracking-widest"
+                          className="bg-indigo-600 text-white py-3 rounded-xl text-[10px] font-bold flex flex-col items-center justify-center gap-1 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 dark:shadow-indigo-900/20 uppercase tracking-widest"
                         >
                           <Download size={14} />
                           PNG
                         </button>
                         <button 
                           onClick={() => downloadInFormat(selectedGalleryItem.refined!, 'jpg', selectedGalleryItem.title || 'refined')}
-                          className="bg-indigo-600 text-white py-3 rounded-xl text-[10px] font-bold flex flex-col items-center justify-center gap-1 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 uppercase tracking-widest"
+                          className="bg-indigo-600 text-white py-3 rounded-xl text-[10px] font-bold flex flex-col items-center justify-center gap-1 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 dark:shadow-indigo-900/20 uppercase tracking-widest"
                         >
                           <Download size={14} />
                           JPG
                         </button>
                         <button 
                           onClick={() => downloadInFormat(selectedGalleryItem.refined!, 'pdf', selectedGalleryItem.title || 'refined')}
-                          className="bg-indigo-600 text-white py-3 rounded-xl text-[10px] font-bold flex flex-col items-center justify-center gap-1 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 uppercase tracking-widest"
+                          className="bg-indigo-600 text-white py-3 rounded-xl text-[10px] font-bold flex flex-col items-center justify-center gap-1 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 dark:shadow-indigo-900/20 uppercase tracking-widest"
                         >
                           <Download size={14} />
                           PDF
                         </button>
                       </div>
 
-                      <div className="p-4 bg-gray-50 rounded-2xl border border-black/5 space-y-3">
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Share Masterpiece</p>
+                      <div className="p-4 bg-gray-50 dark:bg-slate-800/50 rounded-2xl border border-black/5 dark:border-white/5 space-y-3">
+                        <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">Share Masterpiece</p>
                         {!shareUrl ? (
                           <button 
                             onClick={() => handleShare(selectedGalleryItem.refined!, selectedGalleryItem.title || 'My AI Sketch')}
                             disabled={isSharing}
-                            className="w-full py-3 bg-white border border-black/5 text-indigo-600 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-indigo-50 transition-all"
+                            className="w-full py-3 bg-white dark:bg-slate-800 border border-black/5 dark:border-white/5 text-indigo-600 dark:text-indigo-400 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-indigo-50 dark:hover:bg-white/5 transition-all"
                           >
                             {isSharing ? <Loader2 className="animate-spin" size={18} /> : <Share2 size={18} />}
                             {isSharing ? 'Generating...' : 'Get Shareable Link'}
                           </button>
                         ) : (
                           <div className="space-y-3">
-                            <div className="flex items-center gap-2 p-2 bg-white rounded-lg border border-black/5">
-                              <input type="text" readOnly value={shareUrl} className="flex-1 bg-transparent border-none text-[10px] text-gray-500 focus:ring-0" />
-                              <button onClick={() => copyToClipboard(shareUrl)} className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-md">
+                            <div className="flex items-center gap-2 p-2 bg-white dark:bg-slate-800 rounded-lg border border-black/5 dark:border-white/5">
+                              <input type="text" readOnly value={shareUrl} className="flex-1 bg-transparent border-none text-[10px] text-gray-500 dark:text-gray-400 focus:ring-0" />
+                              <button onClick={() => copyToClipboard(shareUrl)} className="p-1.5 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-white/5 rounded-md">
                                 {copied ? <Check size={14} /> : <Copy size={14} />}
                               </button>
                             </div>

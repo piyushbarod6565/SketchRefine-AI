@@ -264,7 +264,7 @@ const Canvas = forwardRef<CanvasHandle, CanvasProps>(({
   }));
 
   return (
-    <div ref={containerRef} className={`relative bg-white overflow-hidden ${className}`}>
+    <div ref={containerRef} className={`relative bg-white dark:bg-slate-900 overflow-hidden ${className}`}>
       <Stage
         width={dimensions.width}
         height={dimensions.height}
