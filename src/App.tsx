@@ -49,6 +49,7 @@ import { jsPDF } from 'jspdf';
 
 import Canvas, { CanvasHandle, Tool } from './components/Canvas';
 import { refineSketch } from './services/geminiService';
+import { getGalleryItems, saveGalleryItems } from './services/storageService';
 import { GalleryItem, LayerData, ShapeData } from './types';
 import LayerPanel from './components/LayerPanel';
 
@@ -92,15 +93,8 @@ export default function App() {
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [refinedImage, setRefinedImage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(() => {
-    try {
-      const saved = localStorage.getItem('sketch_gallery');
-      return saved ? JSON.parse(saved) : [];
-    } catch (e) {
-      console.error("Failed to load gallery from localStorage:", e);
-      return [];
-    }
-  });
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
+  const [isGalleryLoaded, setIsGalleryLoaded] = useState(false);
   const [selectedGalleryItem, setSelectedGalleryItem] = useState<GalleryItem | null>(null);
   const [testResults, setTestResults] = useState<TestCase[]>([]);
   const [isTesting, setIsTesting] = useState(false);
@@ -223,12 +217,41 @@ export default function App() {
 
   // Persist gallery
   React.useEffect(() => {
-    try {
-      localStorage.setItem('sketch_gallery', JSON.stringify(galleryItems));
-    } catch (e) {
-      console.error("Failed to save gallery to localStorage:", e);
+    const loadGallery = async () => {
+      try {
+        const items = await getGalleryItems();
+        // If IndexedDB is empty, check localStorage for migration
+        if (items.length === 0) {
+          const saved = localStorage.getItem('sketch_gallery');
+          if (saved) {
+            const legacyItems = JSON.parse(saved);
+            setGalleryItems(legacyItems);
+            await saveGalleryItems(legacyItems);
+          }
+        } else {
+          setGalleryItems(items);
+        }
+      } catch (e) {
+        console.error("Failed to load gallery:", e);
+      } finally {
+        setIsGalleryLoaded(true);
+      }
+    };
+    loadGallery();
+  }, []);
+
+  React.useEffect(() => {
+    const persistGallery = async () => {
+      try {
+        await saveGalleryItems(galleryItems);
+      } catch (e) {
+        console.error("Failed to save gallery:", e);
+      }
+    };
+    if (isGalleryLoaded) {
+      persistGallery();
     }
-  }, [galleryItems]);
+  }, [galleryItems, isGalleryLoaded]);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
